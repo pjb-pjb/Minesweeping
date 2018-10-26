@@ -9,8 +9,13 @@ let timeNum = 0;
 let flag = true;
 let trueNum = 0;
 let time = "";
+mask();
 selList.forEach(function(val, index) {
 	val.onclick = function() {
+		if(!sessionStorage.maskFlag){
+			myAlert("还想偷鸡");
+			mask();
+		}
 		count = (index+1)*10;
 		rest = count;
 		document.querySelector(".count span").innerText = count;
@@ -71,7 +76,7 @@ function init() {
 		if(trueNum == count || ((boxX * boxY - document.querySelectorAll(".number").length) == count)) {
 			myAlert("胜利", 3000);
 			clearInterval(time);
-
+			location.reload();
 		}
 	}
 }
@@ -91,6 +96,8 @@ function clickLeft(ele) {
 			val.style.backgroundImage = "url(img/blood.bmp)";
 		});
 		myAlert("游戏失败!", 3000);
+		clearInterval(time);
+		location.reload();
 		return;
 	}
 	let num = 0;
@@ -139,7 +146,7 @@ function clickRight(ele) {
 	if(trueNum == count || ((boxX * boxY - document.querySelectorAll(".number").length) == count)) {
 		myAlert("胜利", 3000);
 		clearInterval(time);
-
+		location.reload();
 	}
 }
 
@@ -193,12 +200,33 @@ function myAlert(message, time = 2000) {
 		div.style.opacity = 1;
 	}, 30);
 	setTimeout(function() {
-		location.reload();
 		div.style.opacity = 0;
 	}, time - 500);
 }
 window.onkeydown = function(e){
 	if(e.keyCode == 27){
 		location.reload();
+	}
+}
+function mask(){
+	console.log(111);
+	let flag = sessionStorage.maskFlag;
+	if(!flag){
+		let div = document.createElement("div");
+		let input = document.createElement("input");
+		div.style.cssText = "width: 100vw;height: 100vh;background: rgba(0,0,0,0.7);position: fixed;top: 0;left: 0;display: flex;justify-content: center;align-items: center;";
+		input.placeholder = "请输入宋丽蓉有点傻,方可开始游戏";
+		input.style.cssText = "width: 500px;height: 70px;padding: 0 10px;font-size: 30px;";
+		input.onkeydown = function(e){
+			if(e.keyCode == 13 && this.value=="宋丽蓉有点傻" ){
+				document.body.removeChild(div);
+				myAlert("潘将兵在哈哈大笑...",3000);
+			}else if(e.keyCode == 13){
+				myAlert("宋老师请不要瞎输入");
+			}
+		}
+		div.appendChild(input);
+		document.body.appendChild(div);
+		sessionStorage.maskFlag = 1;
 	}
 }
